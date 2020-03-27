@@ -11,16 +11,16 @@ zIP=$(grep ^.*\/services.googleapis.cn\/.*$ /etc/smartdns/address.conf)
 if [ -z "${zIP}" ]
 # if the line doesn't exsit
 then
-#	echo "address /services.googleapis.cn/${nIP}" >> /etc/smartdns/address.conf
+	echo "address /services.googleapis.cn/${nIP}" >> /etc/smartdns/address.conf
 	/etc/init.d/smartdns restart
-#	echo "New line added (${nIP})!"
+	echo "New line added (${nIP})!"
 elif [ "${nIP}" != "${oIP}" ]
 # if the line exists but the found new IP is not the same as the old one
 then
-#	echo ${zIP}
+	echo ${zIP}
 	sed -i "s/^.*\/services.googleapis.cn\/.*$/address \/services.googleapis.cn\/${nIP}/" /etc/smartdns/address.conf
 	/etc/init.d/smartdns restart
-#	echo "IP changed to ${nIP}!"
-#else
-#	echo "IP needn't changing (${oIP})!"
+	echo "IP changed to ${nIP}!"
+else
+	echo "IP needn't changing (${oIP})!"
 fi

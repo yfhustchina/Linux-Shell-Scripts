@@ -1,0 +1,26 @@
+#!/bin/ash
+oIP=$(cat /etc/smartdns/address.conf | grep googleapis.cn | awk -F '/' '{print $NF}')
+# Get old IP from smartdns config file
+
+nIP=$(/usr/bin/dig @8.8.8.8 services.googleapis.com | grep ^services.googleapis.com | awk '{print $NF}')
+# Get the new IP through designated DNS 8.8.8.8
+
+zIP=$(grep ^.*\/services.googleapis.cn\/.*$ /etc/smartdns/address.conf)
+# Find the line designating IP for services.googleapis.cn
+
+if [ -z "${zIP}" ]
+# if the line doesn't exsit
+then
+#	echo "address /services.googleapis.cn/${nIP}" >> /etc/smartdns/address.conf
+	/etc/init.d/smartdns restart
+#	echo "New line added (${nIP})!"
+elif [ "${nIP}" != "${oIP}" ]
+# if the line exists but the found new IP is not the same as the old one
+then
+#	echo ${zIP}
+	sed -i "s/^.*\/services.googleapis.cn\/.*$/address \/services.googleapis.cn\/${nIP}/" /etc/smartdns/address.conf
+	/etc/init.d/smartdns restart
+#	echo "IP changed to ${nIP}!"
+#else
+#	echo "IP needn't changing (${oIP})!"
+fi

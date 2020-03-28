@@ -35,3 +35,12 @@ then
 else
 	echo "No need to add services.googleapis.com for it's already been there!"
 fi
+
+ctr=$(grep "/root/redir" /etc/crontabs/root)
+if [ -z "${ctr}" ]
+then
+	echo "0 0 * * * /root/redir > /dev/null 2>&1" >> /etc/crontabs/root
+	echo "Root crontab has been updated!"
+else
+	echo "No need to add for it's already been there!"
+fi

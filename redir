@@ -1,4 +1,6 @@
 #!/bin/ash
+#opkg update
+#opkg install bind-dig bind-libs
 oIP=$(cat /etc/smartdns/address.conf | grep googleapis.cn | awk -F '/' '{print $NF}')
 # Get old IP from smartdns config file
 
@@ -23,4 +25,13 @@ then
 	echo "IP changed to ${nIP}!"
 else
 	echo "IP needn't changing (${oIP})!"
+fi
+
+blacklist=$(grep ^services.googleapis.com.*$ /usr/share/passwall/rules/blacklist_host)
+if [ -z "${blacklist}" ]
+then
+	echo "services.googleapis.com" >> /usr/share/passwall/rules/blacklist_host
+	echo "services.googleapis.com has been added to the blacklist"
+else
+	echo "No need to add services.googleapis.com for it's already been there!"
 fi
